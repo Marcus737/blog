@@ -1,0 +1,31 @@
+
+
+jwt:
+  tokenExpiredTime: 3600000 #1小时
+  refreshTokenExpiredTime: 10800000 #3小时
+  serkey: yourserkey
+
+BCrypt:
+  salt: yoursalt
+
+threadPool:
+  corePoolSize: 2
+  maximumPoolSize: 3
+  keepAliveTime: 5
+  maxTaskNum: 500
+
+rsa:
+  privateKey: yourprivatekey
+spring:
+  datasource:
+    username: root
+#    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/tbl?serverTimeZone=Asia/Shanghai
+    password: root
+
+mybatis:
+  type-aliases-package: com.wei.blogservice.entity
+  mapper-locations: classpath:mappers/*Mapper.xml
+server:
+  port: 5362

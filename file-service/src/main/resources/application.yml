@@ -1,0 +1,14 @@
+spring:
+  servlet:
+    multipart:
+      max-request-size: 104857600 #100mb
+      max-file-size: 104857600
+config:
+  maxRate: 200
+  bufferSize: 8192
+  diffTime: 86400000
+  password: pasd211
+  maxUploadSize: 5242880 # 5mb
+  localhost: http://127.0.0.1:${server.port}/
+server:
+  port: 2689

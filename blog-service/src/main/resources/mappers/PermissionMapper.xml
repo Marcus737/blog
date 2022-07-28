@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wei.blogservice.mappers.PermissionMapper">
+
+    <resultMap id="BaseResultMap" type="com.wei.blogservice.entity.Permission">
+        <id column="permission_id" jdbcType="INTEGER" property="permissionId" javaType="java.lang.Integer"/>
+        <result column="permission_name" jdbcType="VARCHAR" property="permissionName" javaType="java.lang.String"/>
+    </resultMap>
+
+    <select id="getPermissionByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select permission_id, permission_name
+        from permission
+        where permission_id in (
+            select permission_id from role_permission
+            left join role r on role_permission.role_id = r.role_id
+            where r.role_id in (
+                select ur.role_id from user_role ur
+                left join role r2 on r2.role_id = ur.role_id
+                where user_id = (
+                    select user_id from user where user.username = #{username}
+                )
+            )
+        )
+    </select>
+
+
+</mapper>

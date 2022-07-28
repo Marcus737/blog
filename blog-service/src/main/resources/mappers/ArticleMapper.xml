@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wei.blogservice.mappers.ArticleMapper">
+
+    <resultMap id="BaseResultMap" type="com.wei.blogservice.entity.Article">
+        <id column="id" jdbcType="INTEGER" property="id" javaType="java.lang.Integer"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId" javaType="java.lang.Integer"/>
+        <result column="img_url" jdbcType="CHAR" property="imgUrl" javaType="java.lang.String"/>
+        <result column="music_name" jdbcType="VARCHAR" property="musicName" javaType="java.lang.String"/>
+        <result column="music_url" jdbcType="VARCHAR" property="musicUrl" javaType="java.lang.String"/>
+        <result column="title" jdbcType="CHAR" property="title" javaType="java.lang.String"/>
+        <result column="description" jdbcType="VARCHAR" property="description" javaType="java.lang.String"/>
+        <result column="visits_num" jdbcType="INTEGER" property="visitsNum" javaType="java.lang.Integer"/>
+        <result column="like_num" jdbcType="INTEGER" property="likeNum" javaType="java.lang.Integer"/>
+        <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" javaType="java.util.Date"/>
+        <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt" javaType="java.util.Date"/>
+        <result column="content" jdbcType="BLOB" property="content" javaType="java.lang.String"/>
+        <result column="classify_d" jdbcType="INTEGER" property="classifyId" javaType="java.lang.Integer"/>
+    </resultMap>
+
+    <select id="getArticleList" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT id, user_id, img_url, music_name, music_url, title, description, visits_num, like_num, created_at, updated_at, classify_id
+        FROM tbl.article
+        order by created_at desc
+        limit #{start}, #{size}
+    </select>
+
+    <select id="getArticleDetail" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT id, user_id, content, img_url, music_name, music_url, title, description, visits_num, like_num, created_at, updated_at, classify_id
+        FROM tbl.article
+        where id = #{id}
+    </select>
+
+
+    <select id="getTotalNum"  resultType="java.lang.Integer">
+        select count(*) from article
+    </select>
+
+    <insert id="likeArticle" >
+        insert into user_article_like values(#{userId}, #{id})
+    </insert>
+
+    <update id="addLikeNum">
+        update tbl.article set like_num = like_num + 1 where id = #{id}
+    </update>
+
+    <update id="addVisitsNum">
+        update tbl.article set visits_num = visits_num+ 1 where id = #{id}
+    </update>
+
+    <insert id="saveArticle" >
+        INSERT INTO
+            article (user_id, img_url, music_name, music_url, title, description, visits_num, like_num, created_at, updated_at, content, classify_id)
+        VALUES (#{art.userId},#{art.imgUrl},#{art.musicName},#{art.musicUrl},#{art.title},#{art.description},#{art.visitsNum},#{art.likeNum},#{art.createdAt},#{art.updatedAt},#{art.content}, #{art.classifyId})
+    </insert>
+
+
+    <select id="articleReadCount" resultType="java.lang.Integer">
+        select sum(visits_num) from tbl.article
+    </select>
+
+    <select id="getLastArticleDate" resultType="java.util.Date">
+        select created_at from tbl.article order by created_at desc limit 1;
+    </select>
+
+    <update id="updateArticle" >
+        UPDATE article
+        <trim prefix="set" suffixOverrides=",">
+            <if test="art.imgUrl != null">
+                img_url = #{art.imgUrl},
+            </if>
+            <if test="art.musicName != null">
+                music_name = #{art.musicName},
+            </if>
+            <if test="art.title != null">
+                title = #{art.title },
+            </if>
+            <if test="art.description != null">
+                description = #{art.description},
+            </if>
+            <if test="art.updatedAt != null">
+                updated_at = #{art.updatedAt},
+            </if>
+            <if test="art.content != null">
+                content = #{art.content},
+            </if>
+            <if test="art.musicUrl != null">
+                music_url = #{art.musicUrl},
+            </if>
+        </trim>
+        where id = #{art.id}
+    </update>
+
+    <delete id="delArticle">
+        DELETE FROM article WHERE id = #{id}
+    </delete>
+</mapper>

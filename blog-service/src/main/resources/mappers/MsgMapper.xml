@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wei.blogservice.mappers.MsgMapper">
+
+    <resultMap id="BaseResultMap" type="com.wei.blogservice.entity.Msg">
+        <id column="id" jdbcType="INTEGER" property="id" javaType="java.lang.Integer"/>
+        <result column="content" jdbcType="VARCHAR" property="content" javaType="java.lang.String"/>
+        <result column="username" jdbcType="VARCHAR" property="username" javaType="java.lang.String"/>
+        <result column="avatar" jdbcType="VARCHAR" property="avatar" javaType="java.lang.String"/>
+        <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" javaType="java.util.Date"/>
+    </resultMap>
+
+    <select id="getMsgList" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT id, content, created_at, username, avatar
+        FROM msg
+        order by created_at
+        desc limit #{start}, #{size}
+    </select>
+
+    <insert id="saveMsg" useGeneratedKeys = "true" keyProperty = "id" >
+        INSERT INTO
+            msg (content, created_at, username, avatar)
+        VALUES
+            (#{msg.content}, #{msg.createdAt},#{msg.username},#{msg.avatar})
+
+    </insert>
+
+    <select id="getTotal" resultType="java.lang.Integer">
+        select count(1) from msg;
+    </select>
+
+    <delete id="delMsg">
+        delete from msg where id = #{msgId}
+    </delete>
+</mapper>
